@@ -10,6 +10,14 @@ so I thought it might be cute to ~~bastardize~~ reuse one of their words.
 
 *Laskea* means *evaluate* or *compute* in Finnish.
 
+## Architecture
+
+This project consists of 3 parts,
+
+- `engine/` - the actual evaluation engine
+- `bindings/` - glue for making the evaluation engine available to JavaScript
+- `frontend/` - the React UI
+
 ## License
 
 This project is licensed under either of
@@ -32,7 +40,7 @@ license, shall be dual licensed as above, without any additional terms or
 conditions.
 
 This crate intends to be free of soundness bugs. The developers will
-do their best to avoid them, and welcome help in analyzing and fixing them.
+do their best to avoid them, and welcome help analyzing and fixing them.
 
 [API Docs]: https://michael-f-bryan.github.io/{{project-name}}
 [crev]: https://github.com/crev-dev/cargo-crev
