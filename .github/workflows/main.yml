@@ -11,18 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache Rust
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache Frontend
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-frontend-${{ hashFiles('**/yarn.lock') }}
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
       - name: Install wasm-pack
-        uses: actions-rs/install@v0.1
-        with:
-          crate: wasm-pack
+        run: cargo install --debug wasm-pack
+        continue-on-error: true
       - name: Install Node
         uses: actions/setup-node@v2
-        with:
-          cache: yarn
       - name: Install Frontend Dependencies
         run: yarn install
         working-directory: frontend
@@ -63,3 +75,4 @@ jobs:
         with:
           branch: gh-pages
           folder: frontend/dist
+        if: github.ref == 'ref/head/master'
