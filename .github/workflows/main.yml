@@ -77,4 +77,4 @@ jobs:
         with:
           branch: gh-pages
           folder: frontend/dist
-        if: ${{ github.ref == 'ref/head/master' }}
+        if: github.ref == 'refs/heads/master'
