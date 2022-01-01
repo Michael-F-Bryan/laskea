@@ -3,6 +3,11 @@
     "version": "1.0.0",
     "license": "MIT or Apache-2.0",
     "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Michael-F-Bryan/laskea"
+    },
+    "homepage": "https://michael-f-bryan.github.io/laskea/",
     "scripts": {
         "build": "parcel build index.html --public-url ./",
         "build:check": "tsc",

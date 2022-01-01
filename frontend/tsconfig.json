@@ -1,14 +1,18 @@
 {
     "compilerOptions": {
         "target": "es2016",
-        "lib": ["DOM"],
+        "lib": [
+            "DOM"
+        ],
         "jsx": "react-jsx",
         "module": "commonjs",
-        "rootDir": "./src",
         "allowJs": false,
         "noEmit": true,
         "strict": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "resolveJsonModule": true
     },
-    "files": ["./src/index.tsx"]
+    "files": [
+        "./src/index.tsx"
+    ]
 }
