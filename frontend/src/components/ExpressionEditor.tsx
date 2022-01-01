@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
 import { MenuItem, Select } from "@mui/material";
 import { Expression } from "../app/nodes";
 import { useAppDispatch } from "../app/hooks";
 import { setExpression } from "../app/store";
 import StringConstantEditor from "./StringConstantEditor";
 import RequestEditor from "./RequestEditor";
+import EqualsEditor from "./EqualsEditor";
+import GetPropertyEditor from "./GetPropertyEditor";
 
 type Props = {
     index: number;
@@ -20,7 +21,7 @@ type Option<T extends Expression["type"]> = {
     render: (props: {
         index: number;
         expr: NarrowedExpression<T>;
-    }) => ReactNode;
+    }) => JSX.Element;
     defaultValue: () => NarrowedExpression<T>;
 };
 
@@ -34,19 +35,22 @@ const options: Options = {
         render: StringConstantEditor,
         defaultValue: () => ({ type: "string-constant", value: "" }),
     },
-    equals: {
-        name: "Equals",
-        render: () => <></>,
-        defaultValue: () => ({ type: "equals", input: "", value: "" }),
-    },
     request: {
         name: "HTTP",
         render: RequestEditor,
-        defaultValue: () => ({ type: "request", url: "" }),
+        defaultValue: () => ({
+            type: "request",
+            url: "https://httpbin.org/ip",
+        }),
+    },
+    equals: {
+        name: "Equals",
+        render: EqualsEditor,
+        defaultValue: () => ({ type: "equals", input: "", value: "" }),
     },
     "get-property": {
         name: "Property",
-        render: () => <></>,
+        render: GetPropertyEditor,
         defaultValue: () => ({ type: "get-property", input: "", field: "" }),
     },
 };
@@ -70,10 +74,8 @@ export default function ExpressionEditor({ index, expr }: Props) {
         );
     });
 
-    const render: (props: { index: number; expr: any }) => ReactNode =
+    const Render: (props: { index: number; expr: any }) => JSX.Element =
         options[expr.type].render;
-
-    const body = render({ index, expr });
 
     return (
         <>
@@ -84,7 +86,7 @@ export default function ExpressionEditor({ index, expr }: Props) {
                 {menuItems}
             </Select>
 
-            {body}
+            <Render index={index} expr={expr} />
         </>
     );
 }

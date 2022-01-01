@@ -6,6 +6,14 @@ export type StringConstant = {
 export type Request = {
     type: "request";
     url: string;
+    response?: ResponseValue;
+    error?: string;
+};
+export type ResponseValue = {
+    status: number;
+    statusText: string;
+    url: string;
+    body: any;
 };
 
 export type Equals = {
@@ -26,11 +34,12 @@ export type Node = {
     name: string;
     expression: Expression;
     result: Value;
-    errors: Errors;
 };
 
-export type Errors = {
-    name?: string;
-};
-
-export type Value = null | boolean | string | { [key: string]: Value };
+export type Value =
+    | null
+    | boolean
+    | number
+    | string
+    | { type: "object"; value: any }
+    | { type: "error"; error: string };

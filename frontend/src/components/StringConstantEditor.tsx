@@ -12,8 +12,9 @@ export default function StringConstantEditor({ index, expr }: Props) {
     const dispatch = useAppDispatch();
     const { value } = expr;
 
-    const setText = (text: string) =>
+    const setText = (text: string) => {
         dispatch(setExpression({ index, expr: { ...expr, value: text } }));
+    };
 
     return (
         <TextField

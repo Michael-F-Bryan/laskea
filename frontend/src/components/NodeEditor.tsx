@@ -15,7 +15,7 @@ export default function NodeEditor({ index, node }: Props) {
     const dispatch = useAppDispatch();
     const [hover, setHover] = useState(false);
 
-    const { name, expression, errors } = node;
+    const { name, expression } = node;
 
     return (
         <Paper
@@ -32,8 +32,6 @@ export default function NodeEditor({ index, node }: Props) {
                 onChange={e =>
                     dispatch(setName({ index, name: e.target.value }))
                 }
-                error={!!errors.name}
-                helperText={errors.name}
             />
 
             <ExpressionEditor index={index} expr={expression} />

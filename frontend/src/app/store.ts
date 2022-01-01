@@ -1,5 +1,10 @@
-import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
-import { Expression, Node } from "./nodes";
+import {
+    createSlice,
+    configureStore,
+    PayloadAction,
+    createSelector,
+} from "@reduxjs/toolkit";
+import { Expression, Node, Value } from "./nodes";
 
 type NodesState = {
     nodes: Node[];
@@ -21,7 +26,6 @@ const nodesSlice = createSlice({
                     value: "",
                 },
                 result: null,
-                errors: {},
             };
             state.nodes.push(emptyNode);
         },
@@ -33,21 +37,7 @@ const nodesSlice = createSlice({
             action: PayloadAction<{ index: number; name: string }>
         ) => {
             const { index, name } = action.payload;
-            const node = state.nodes[index];
-            node.name = name;
-            const otherNames = state.nodes
-                .filter((n, i) => i != index)
-                .map(n => n.name);
-
-            if (name === "") {
-                node.errors.name = "Required";
-            } else if (!name.match(/^[a-zA-Z_][\w\d_-]*$/)) {
-                node.errors.name = "Invalid Name";
-            } else if (otherNames.includes(name)) {
-                node.errors.name = "Duplicate Name";
-            } else {
-                node.errors.name = undefined;
-            }
+            state.nodes[index].name = name;
         },
         setExpression: (
             state,
@@ -56,13 +46,31 @@ const nodesSlice = createSlice({
             const { index, expr } = action.payload;
             state.nodes[index].expression = expr;
         },
+        setResults: (state, action: PayloadAction<Value[]>) => {
+            const results = action.payload;
+
+            for (let i = 0; i < results.length; i++) {
+                state.nodes[i].result = results[i];
+            }
+        },
     },
 });
 
-export const { addNode, removeNode, setName, setExpression } =
+export const { addNode, removeNode, setName, setExpression, setResults } =
     nodesSlice.actions;
 
 export const store = configureStore({ reducer: { nodes: nodesSlice.reducer } });
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+
+export const selectExpressions = createSelector(
+    (state: RootState) => state.nodes.nodes,
+    (nodes: Node[]) => {
+        const entries: Array<[string, Expression]> = nodes.map(n => [
+            n.name,
+            n.expression,
+        ]);
+        return Object.fromEntries(entries);
+    }
+);
