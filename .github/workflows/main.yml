@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,6 +30,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          profile: minimal
       - name: Install wasm-pack
         run: cargo install --debug wasm-pack
         continue-on-error: true
@@ -43,15 +44,18 @@ jobs:
       - name: Cargo Check
         uses: actions-rs/cargo@v1
         with:
-          command: check --workspace
+          command: check
+          args: --workspace
       - name: Cargo Build
         uses: actions-rs/cargo@v1
         with:
-          command: build --workspace
+          command: build
+          args: --workspace
       - name: Cargo Test
         uses: actions-rs/cargo@v1
         with:
-          command: test --workspace
+          command: test
+          args: --workspace
       - name: Generate WebAssembly
         run: wasm-pack build bindings
 
@@ -70,7 +74,7 @@ jobs:
         run: yarn build
         working-directory: frontend
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
           branch: gh-pages
