@@ -1,5 +1,9 @@
 # Laskea
 
+[![Continuous Integration](https://github.com/Michael-F-Bryan/laskea/actions/workflows/main.yml/badge.svg)](https://github.com/Michael-F-Bryan/laskea/actions/workflows/main.yml)
+
+[(Online Demo)](https://michael-f-bryan.github.io/laskea)
+
 An incremental computation engine powered by [Salsa][salsa].
 
 ## Etymology
