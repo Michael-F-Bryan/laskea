@@ -26,6 +26,7 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-frontend-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -34,13 +35,6 @@ jobs:
       - name: Install wasm-pack
         run: cargo install --debug wasm-pack
         continue-on-error: true
-      - name: Install Node
-        uses: actions/setup-node@v2
-      - name: Install Frontend Dependencies
-        run: yarn install
-        working-directory: frontend
-
-      # Rust builds and testing
       - name: Cargo Check
         uses: actions-rs/cargo@v1
         with:
@@ -59,11 +53,15 @@ jobs:
       - name: Generate WebAssembly
         run: wasm-pack build bindings
 
-    # Frontend
+      - name: Install Node
+        uses: actions/setup-node@v2
+      - name: Install Frontend Dependencies
+        run: yarn install
+        working-directory: frontend
       - name: Link Frontend to Generated Bindings
         run: |
           pushd bindings/pkg
-          yarn Link
+          yarn link
           popd
           pushd frontend
           yarn link laskea-bindings
