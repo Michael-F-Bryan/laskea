@@ -1,0 +1,65 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Install wasm-pack
+        uses: actions-rs/install@v0.1
+        with:
+          crate: wasm-pack
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          cache: yarn
+      - name: Install Frontend Dependencies
+        run: yarn install
+        working-directory: frontend
+
+      # Rust builds and testing
+      - name: Cargo Check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check --workspace
+      - name: Cargo Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build --workspace
+      - name: Cargo Test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test --workspace
+      - name: Generate WebAssembly
+        run: wasm-pack build bindings
+
+    # Frontend
+      - name: Link Frontend to Generated Bindings
+        run: |
+          pushd bindings/pkg
+          yarn Link
+          popd
+          pushd frontend
+          yarn link laskea-bindings
+      - name: Type-check Frontend
+        run: yarn build:check
+        working-directory: frontend
+      - name: Build Frontend
+        run: yarn build
+        working-directory: frontend
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: frontend/dist

@@ -29,6 +29,8 @@ type Options = {
     [T in Expression["type"]]: Option<T>;
 };
 
+type DefaultValues = Record<string, { defaultValue: () => Expression }>;
+
 const options: Options = {
     "string-constant": {
         name: "String",
@@ -63,7 +65,11 @@ export default function ExpressionEditor({ index, expr }: Props) {
             return;
         }
 
-        dispatch(setExpression({ index, expr: options[type].defaultValue() }));
+        const defaultValues: DefaultValues = options;
+
+        dispatch(
+            setExpression({ index, expr: defaultValues[type].defaultValue() })
+        );
     };
 
     const menuItems = Object.entries(options).map(([type, { name }]) => {
