@@ -4,8 +4,8 @@ extern crate pretty_assertions;
 
 mod evaluate;
 mod inputs;
-mod nodes;
 mod sequence;
 mod text;
+mod types;
 
-pub use self::{evaluate::Evaluate, inputs::Inputs, nodes::*, sequence::Sequence, text::Text};
+pub use self::{evaluate::Evaluate, inputs::Inputs, sequence::Sequence, text::Text, types::*};

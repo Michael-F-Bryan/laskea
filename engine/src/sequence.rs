@@ -3,7 +3,7 @@ use std::{
     sync::Arc,
 };
 
-/// A reference-counted string.
+/// A reference-counted, immutable `Vec<T>`.
 #[derive(
     Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, serde::Serialize, serde::Deserialize,
 )]
@@ -16,6 +16,10 @@ impl<T> Sequence<T> {
 
     pub fn new(s: impl Into<Arc<[T]>>) -> Self {
         Sequence(s.into())
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = &'_ T> {
+        self.0.iter()
     }
 }
 

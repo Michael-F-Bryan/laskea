@@ -1,4 +1,4 @@
-use crate::{EvaluationError, Expression, Inputs, Node, Object, Sequence, Text, Value};
+use crate::{EvaluationError, Expression, Inputs, Node, Sequence, Text, Value};
 use std::{
     collections::{btree_map::Entry, BTreeMap},
     sync::Arc,
@@ -49,7 +49,7 @@ fn eval(db: &dyn Evaluate, name: Text, expr: Arc<Expression>) -> Result<Value, E
             response: Some(response),
             error: None,
             ..
-        } => Value::from_serde(&response).map_err(Into::into),
+        } => Ok(response.into()),
         Expression::Request {
             response: None,
             error: None,
@@ -81,7 +81,7 @@ fn get_property(db: &dyn Evaluate, target: Text, field: Text) -> Result<Value, E
 
     match db.eval(target, Arc::clone(expression)) {
         Ok(Value::Object(obj)) => match obj.get(&*field) {
-            Some(field_value) => Ok(Value::from(Object::from(field_value))),
+            Some(field_value) => Ok(field_value.clone()),
             None => todo!(),
         },
         Ok(_) => todo!(),
@@ -193,7 +193,7 @@ mod tests {
             response: Some(response.clone()),
             error: None,
         });
-        let should_be = Value::from_serde(&response).unwrap();
+        let should_be = Value::from(response);
 
         let got = db.eval("".into(), expr).unwrap();
 
