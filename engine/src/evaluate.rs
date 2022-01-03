@@ -255,6 +255,39 @@ mod tests {
     }
 
     #[test]
+    fn get_property() {
+        let mut db = Database::default();
+        let get = Arc::new(Expression::GetProperty {
+            target: "input".into(),
+            field: "status".into(),
+        });
+        let nodes = vec![
+            Node {
+                name: "input".into(),
+                expr: Arc::new(Expression::Request {
+                    url: "http://example.com/".into(),
+                    response: Some(Response {
+                        url: "http://example.com/".into(),
+                        status: 200,
+                        status_text: Text::from("OK"),
+                        body: Value::Number(42),
+                    }),
+                    error: None,
+                }),
+            },
+            Node {
+                name: "get-status".into(),
+                expr: Arc::clone(&get),
+            },
+        ];
+        db.set_nodes(nodes.into());
+
+        let got = db.eval("get-status".into(), get).unwrap();
+
+        assert_eq!(got, Value::from(200));
+    }
+
+    #[test]
     fn cycles_are_errors() {
         let mut db = Database::default();
         let nodes: Sequence<_> = vec![
