@@ -1,8 +1,7 @@
-use crate::Node;
-use std::sync::Arc;
+use crate::{Node, Sequence};
 
 #[salsa::query_group(InputsStorage)]
 pub trait Inputs {
     #[salsa::input]
-    fn nodes(&self) -> Arc<[Node]>;
+    fn nodes(&self) -> Sequence<Node>;
 }
