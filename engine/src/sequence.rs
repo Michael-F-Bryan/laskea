@@ -65,3 +65,9 @@ where
         self.0.eq(other)
     }
 }
+
+impl<T> FromIterator<T> for Sequence<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        Sequence(iter.into_iter().collect())
+    }
+}

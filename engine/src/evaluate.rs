@@ -6,16 +6,10 @@ use std::{
 
 #[salsa::query_group(EvaluateStorage)]
 pub trait Evaluate: Inputs {
-    fn evaluate(&self) -> Sequence<NodeResult>;
+    fn evaluate(&self) -> Sequence<Result<Value, EvaluationError>>;
     fn eval(&self, name: Text, expr: Arc<Expression>) -> Result<Value, EvaluationError>;
     fn named_expressions(&self) -> BTreeMap<Text, NamedExpression>;
     fn reference_cycle(&self, name: Text) -> Option<Sequence<Text>>;
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct NodeResult {
-    pub name: Text,
-    pub value: Result<Value, EvaluationError>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -24,13 +18,13 @@ pub struct NamedExpression {
     pub expression: Arc<Expression>,
 }
 
-fn evaluate(db: &dyn Evaluate) -> Sequence<NodeResult> {
+fn evaluate(db: &dyn Evaluate) -> Sequence<Result<Value, EvaluationError>> {
     let mut results = Vec::new();
 
     for node in db.nodes().iter().cloned() {
         let Node { name, expr } = node;
         let value = db.eval(name.clone(), expr);
-        results.push(NodeResult { name, value });
+        results.push(value);
     }
 
     results.into()
@@ -304,18 +298,12 @@ mod tests {
         db.set_nodes(nodes.clone());
 
         let should_be = vec![
-            NodeResult {
-                name: "first".into(),
-                value: Err(EvaluationError::from(
-                    "Cycle detected: first → second → first",
-                )),
-            },
-            NodeResult {
-                name: "second".into(),
-                value: Err(EvaluationError::from(
-                    "Cycle detected: second → first → second",
-                )),
-            },
+            Err(EvaluationError::from(
+                "Cycle detected: first → second → first",
+            )),
+            Err(EvaluationError::from(
+                "Cycle detected: second → first → second",
+            )),
         ];
 
         let got = db.evaluate();

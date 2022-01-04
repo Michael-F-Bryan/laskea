@@ -25,6 +25,12 @@ impl Deref for Text {
     }
 }
 
+impl AsRef<str> for Text {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
+
 impl Default for Text {
     fn default() -> Self {
         Text::new("")

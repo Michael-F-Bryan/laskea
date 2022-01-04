@@ -11,8 +11,10 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 console_error_panic_hook = "0.1.6"
-wasm-bindgen = "0.2.63"
+wasm-bindgen = { version = "0.2.63", features = ["serde-serialize"] }
 laskea-engine = { version = "0.1.0", path = "../engine" }
+salsa = "0.16.1"
+js-sys = "0.3.55"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"

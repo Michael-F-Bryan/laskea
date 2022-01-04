@@ -1,5 +1,11 @@
 use crate::Text;
-use std::{collections::BTreeMap, fmt::Display, hash::Hash, ops::Deref, sync::Arc};
+use std::{
+    collections::BTreeMap,
+    fmt::{self, Display, Formatter},
+    hash::Hash,
+    ops::Deref,
+    sync::Arc,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub struct Node {
@@ -56,9 +62,15 @@ pub struct Response {
 #[derive(Debug, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub struct EvaluationError(String);
 
-impl<D: Display> From<D> for EvaluationError {
+impl<D: Into<String>> From<D> for EvaluationError {
     fn from(value: D) -> Self {
-        EvaluationError(value.to_string())
+        EvaluationError(value.into())
+    }
+}
+
+impl Display for EvaluationError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Display::fmt(&self.0, f)
     }
 }
 

@@ -8,4 +8,10 @@ mod sequence;
 mod text;
 mod types;
 
-pub use self::{evaluate::Evaluate, inputs::Inputs, sequence::Sequence, text::Text, types::*};
+pub use self::{
+    evaluate::{Evaluate, EvaluateStorage},
+    inputs::{Inputs, InputsStorage},
+    sequence::Sequence,
+    text::Text,
+    types::*,
+};
