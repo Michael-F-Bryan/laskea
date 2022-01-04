@@ -1,28 +1,28 @@
 import { TextField } from "@mui/material";
+import { Expression } from "laskea-bindings";
 import { useAppDispatch } from "../app/hooks";
-import { Equals } from "../app/nodes";
 import { setExpression } from "../app/store";
 
 type Props = {
     index: number;
-    expr: Equals;
+    expr: Extract<Expression, { type: "equals" }>;
 };
 
 export default function EqualsEditor({ index, expr }: Props) {
     const dispatch = useAppDispatch();
-    const { value } = expr;
+    const { target, value } = expr;
 
-    const setInput = (input: string) =>
-        dispatch(setExpression({ index, expr: { ...expr, input } }));
+    const setTarget = (target: string) =>
+        dispatch(setExpression({ index, expr: { ...expr, target } }));
     const setValue = (value: string) =>
         dispatch(setExpression({ index, expr: { ...expr, value } }));
 
     return (
         <>
             <TextField
-                value={value}
+                value={target}
                 placeholder="Target"
-                onChange={e => setInput(e.target.value)}
+                onChange={e => setTarget(e.target.value)}
             />
             <TextField
                 value={value}

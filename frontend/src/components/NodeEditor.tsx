@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Paper, TextField } from "@mui/material";
-import { Node } from "../app/nodes";
 import RemoveCircle from "@mui/icons-material/RemoveCircle";
+import { Node } from "laskea-bindings";
 import { useAppDispatch } from "../app/hooks";
 import { setName, removeNode } from "../app/store";
 import ExpressionEditor from "./ExpressionEditor";

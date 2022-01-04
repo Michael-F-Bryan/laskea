@@ -1,11 +1,11 @@
 import { TextField } from "@mui/material";
+import { Expression } from "laskea-bindings";
 import { useAppDispatch } from "../app/hooks";
-import { StringConstant } from "../app/nodes";
 import { setExpression } from "../app/store";
 
 type Props = {
     index: number;
-    expr: StringConstant;
+    expr: Extract<Expression, { type: "string" }>;
 };
 
 export default function StringConstantEditor({ index, expr }: Props) {

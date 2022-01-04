@@ -1,11 +1,11 @@
 import { MenuItem, Select } from "@mui/material";
-import { Expression } from "../app/nodes";
 import { useAppDispatch } from "../app/hooks";
 import { setExpression } from "../app/store";
 import StringConstantEditor from "./StringConstantEditor";
 import RequestEditor from "./RequestEditor";
 import EqualsEditor from "./EqualsEditor";
 import GetPropertyEditor from "./GetPropertyEditor";
+import { Expression } from "laskea-bindings";
 
 type Props = {
     index: number;
@@ -32,10 +32,10 @@ type Options = {
 type DefaultValues = Record<string, { defaultValue: () => Expression }>;
 
 const options: Options = {
-    "string-constant": {
+    "string": {
         name: "String",
         render: StringConstantEditor,
-        defaultValue: () => ({ type: "string-constant", value: "" }),
+        defaultValue: () => ({ type: "string", value: "" }),
     },
     request: {
         name: "HTTP",
@@ -48,12 +48,12 @@ const options: Options = {
     equals: {
         name: "Equals",
         render: EqualsEditor,
-        defaultValue: () => ({ type: "equals", input: "", value: "" }),
+        defaultValue: () => ({ type: "equals", target: "", value: "" }),
     },
     "get-property": {
         name: "Property",
         render: GetPropertyEditor,
-        defaultValue: () => ({ type: "get-property", input: "", field: "" }),
+        defaultValue: () => ({ type: "get-property", target: "", field: "" }),
     },
 };
 

@@ -4,10 +4,16 @@ import {
     PayloadAction,
     createSelector,
 } from "@reduxjs/toolkit";
-import { Expression, Node, Value } from "./nodes";
+import { Expression, Node as LaskeaNode, Value } from "laskea-bindings";
 
 type NodesState = {
     nodes: Node[];
+};
+
+type Node = {
+    name: string;
+    expression: Expression;
+    result: Value;
 };
 
 const initialState: NodesState = {
@@ -22,10 +28,10 @@ const nodesSlice = createSlice({
             const emptyNode: Node = {
                 name: "",
                 expression: {
-                    type: "string-constant",
+                    type: "string",
                     value: "",
                 },
-                result: null,
+                result: { "type": "indetermimate" },
             };
             state.nodes.push(emptyNode);
         },

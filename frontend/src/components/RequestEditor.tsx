@@ -1,12 +1,12 @@
 import { Button, TextField } from "@mui/material";
+import { Expression } from "laskea-bindings";
 import { useState } from "react";
 import { useAppDispatch } from "../app/hooks";
-import { Request, ResponseValue, Value } from "../app/nodes";
 import { setExpression } from "../app/store";
 
 type Props = {
     index: number;
-    expr: Request;
+    expr: Extract<Expression, { type: "request" }>;
 };
 
 export default function RequestEditor({ index, expr }: Props) {
@@ -36,7 +36,7 @@ export default function RequestEditor({ index, expr }: Props) {
     );
 }
 
-async function sendRequest(url: string): Promise<Request> {
+async function sendRequest(url: string): Promise<Expression> {
     const options = {
         method: "get",
         headers: {
@@ -53,7 +53,7 @@ async function sendRequest(url: string): Promise<Request> {
             url,
             response: {
                 status: response.status,
-                statusText: response.statusText,
+                status_text: response.statusText,
                 url: response.url,
                 body,
             },

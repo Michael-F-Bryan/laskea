@@ -8,6 +8,7 @@ type Expression =
     | { type: "get-property", target: string, field: string }
     | {
         type: "request",
+        url: string,
         response?: {
             status: number,
             status_text: string,
@@ -34,6 +35,15 @@ extern "C" {
 
     #[wasm_bindgen(method, getter)]
     fn value(this: &Expression) -> JsValue;
+
+    #[wasm_bindgen(method, getter)]
+    fn response(this: &Expression) -> JsValue;
+
+    #[wasm_bindgen(method, getter)]
+    fn url(this: &Expression) -> String;
+
+    #[wasm_bindgen(method, getter)]
+    fn error(this: &Expression) -> Option<String>;
 }
 
 impl Expression {
@@ -56,7 +66,24 @@ impl Expression {
                 let field = self.field();
                 Ok(laskea_engine::Expression::get(target, field))
             }
-            "request" => todo!(),
+            "request" => {
+                let url = self.url().into();
+                let response = self.response();
+                let response = if response.is_undefined() {
+                    None
+                } else {
+                    self.response()
+                        .into_serde()
+                        .map_err(|e| format!("Unable to parse the response: {}", e))?
+                };
+                let error = self.error().map(Into::into);
+
+                Ok(laskea_engine::Expression::Request {
+                    url,
+                    response,
+                    error,
+                })
+            }
             _ => Err(format!("Unknown type: {}", ty).into()),
         }
     }

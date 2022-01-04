@@ -1,26 +1,26 @@
 import { TextField } from "@mui/material";
+import { Expression } from "laskea-bindings";
 import { useAppDispatch } from "../app/hooks";
-import { Equals, GetProperty } from "../app/nodes";
 import { setExpression } from "../app/store";
 
 type Props = {
     index: number;
-    expr: GetProperty;
+    expr: Extract<Expression, { type: "get-property" }>;
 };
 
 export default function GetPropertyEditor({ index, expr }: Props) {
     const dispatch = useAppDispatch();
-    const { input, field } = expr;
+    const { target, field } = expr;
 
     const setInput = (input: string) =>
-        dispatch(setExpression({ index, expr: { ...expr, input } }));
+        dispatch(setExpression({ index, expr: { ...expr, target } }));
     const setValue = (field: string) =>
         dispatch(setExpression({ index, expr: { ...expr, field } }));
 
     return (
         <>
             <TextField
-                value={input}
+                value={target}
                 placeholder="Target"
                 onChange={e => setInput(e.target.value)}
             />
