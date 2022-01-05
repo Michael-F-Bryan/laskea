@@ -16,5 +16,9 @@ laskea-engine = { version = "0.1.0", path = "../engine" }
 salsa = "0.16.1"
 js-sys = "0.3.55"
 
+# Required to make sure the "instant" uses the right imports
+# See https://github.com/rustwasm/wasm-bindgen/issues/2215#issuecomment-796244209
+parking_lot = { version = "0.11.2", features = ["wasm-bindgen"] }
+
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
